@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.awt.*;
 
 //abstract class which pages like home, settings, etc. extends
 public abstract class BasePage extends JPanel {
