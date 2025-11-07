@@ -1,0 +1,14 @@
+import javax.swing.*;
+import java.awt.*;
+
+//abstract class which pages like home, settings, etc. extends
+public abstract class BasePage extends JPanel {
+
+    //constructor
+    public BasePage() {
+        setUI();
+    }
+
+    //all subclasses of BasePage must override this method
+    protected abstract void setUI();
+}
