@@ -32,7 +32,7 @@ public class MainFrame extends JFrame {
     public void setUpMainFrame() {
         setTitle("Inventory Management System");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1200, 1000);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
     public void setUpPages() {

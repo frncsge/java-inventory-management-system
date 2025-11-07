@@ -107,7 +107,7 @@ public class InventoryPage extends BasePage {
 
         //add item to inventory and update table
         inventory.addItem(new Item(name, price, qty, category));
-        inventoryTable.refresh(inventory.getItems());
+        inventoryTable.update(inventory.getItems());
 
         //clear input if item is added
         clearInputValue();

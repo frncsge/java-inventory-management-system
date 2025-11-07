@@ -20,7 +20,7 @@ public class InventoryTable extends JPanel {
         add(new JScrollPane(table), BorderLayout.CENTER);
     }
 
-    public void refresh(ArrayList<Item> items) {
+    public void update(ArrayList<Item> items) {
         tableModel.setRowCount(0);
 
         for (Item item : items) {
