@@ -22,6 +22,7 @@ public class MainFrame extends JFrame {
                 cardLayout.show(mainPanel, e.getActionCommand());
             }
         });
+
         //add sidebar to the main frame
         add(sidebar, BorderLayout.WEST);
 
@@ -30,7 +31,7 @@ public class MainFrame extends JFrame {
         mainPanel.add(new InventoryPage(), "Inventory");
         mainPanel.add(new SettingsPage(), "Settings");
 
-        //add main panel to the frame
+        //add main panel to the main frame
         add(mainPanel, BorderLayout.CENTER);
     }
 
