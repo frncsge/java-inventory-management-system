@@ -1,6 +1,8 @@
+package pages;
+
 import javax.swing.*;
 
-public class SettingsPage extends BasePage{
+public class SettingsPage extends BasePage {
 
     @Override
     public void setUI() {

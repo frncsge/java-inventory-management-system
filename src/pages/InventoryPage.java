@@ -1,6 +1,8 @@
+package pages;
+
 import javax.swing.*;
 
-public class InventoryPage extends BasePage{
+public class InventoryPage extends BasePage {
 
     @Override
     public void setUI() {

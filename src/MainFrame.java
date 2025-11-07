@@ -1,3 +1,8 @@
+import pages.HomePage;
+import pages.InventoryPage;
+import pages.SettingsPage;
+import components.SidebarPanel;
+
 import javax.swing.*;
 import java.awt.*;
 
