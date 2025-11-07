@@ -1,12 +1,21 @@
 package pages;
 
+import components.Button;
+import components.ErrorAlert;
 import components.Input;
+import components.InventoryTable;
+import models.Inventory;
+import models.Item;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
+import java.math.BigDecimal;
 
 public class InventoryPage extends BasePage {
     Input nameInput, priceInput, qtyInput, categoryInput;
+    private Inventory inventory;
+    private InventoryTable inventoryTable;
 
     @Override
     public void setUI() {
@@ -16,8 +25,18 @@ public class InventoryPage extends BasePage {
         JLabel titleLabel = new JLabel("Inventory", SwingConstants.CENTER);
         add(titleLabel, BorderLayout.NORTH);
 
+        //initialize inventory and inventoryTable
+        inventory = new Inventory();
+        inventoryTable = new InventoryTable();
+
+        //add padding to the table
+        inventoryTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
         //add the panel containing all inputs
         add(inputs(), BorderLayout.WEST);
+
+        //add table
+        add(inventoryTable, BorderLayout.CENTER);
     }
 
     //creates a panel containing all inputs and the add button
@@ -37,22 +56,61 @@ public class InventoryPage extends BasePage {
             panel.add(input); //add input to the panel
         }
 
-        //add the "add" button to the panel
-        JButton button = new JButton("Add");
-        button.addActionListener(e -> addItemToInventory()); //calls addItemToInventory method
-        panel.add(button);
+        Button addButton = new Button("Add", e -> addItemToInventory());
+        Button clearButton = new Button("Clear", e -> clearInputValue());
+        panel.add(addButton);
+        panel.add(clearButton);
 
         return panel;
     }
 
-    //extracts value/text from the inputs
-    private Object[] getInputValue() {
+    private void addItemToInventory() {
+        //extract input values
         String name = nameInput.getInput();
-        String price = priceInput.getInput();
-        String qty = qtyInput.getInput().trim();
+        String priceStr = priceInput.getInput();
+        String qtyStr = qtyInput.getInput();
         String category = categoryInput.getInput();
 
-        return new Object[]{name, price, qty, category};
+        //check if an input is empty
+        if (name.isEmpty() || priceStr.isEmpty() || qtyStr.isEmpty() || category.isEmpty()) {
+            new ErrorAlert("Empty Input", "Please fill in all input fields.");
+            return;
+        }
+
+        //validate price, show dialog box for error
+        BigDecimal price;
+        try {
+            price = new BigDecimal(priceStr);
+
+            if(price.compareTo(BigDecimal.ZERO) <= 0) { //returns -1 if price < 0; 0 if price = 0; 1 if price > 0
+                new ErrorAlert("Invalid Input", "Price must be more than 0.");
+                return ;
+            }
+        } catch (NumberFormatException e) {
+            new ErrorAlert("Invalid Input", "Price must be a number.");
+            return;
+        }
+
+        //validate qty, show dialog box for error
+        int qty;
+        try {
+            qty = Integer.parseInt(qtyStr);
+
+            if(qty <= 0) {
+                new ErrorAlert("Invalid Input", "Quantity must be more than 0.");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            new ErrorAlert("Invalid Input", "Quantity must be a number.");
+            return;
+        }
+
+        //add item to inventory and update table
+        inventory.addItem(new Item(name, price, qty, category));
+        inventoryTable.refresh(inventory.getItems());
+
+        //clear input if item is added
+        clearInputValue();
     }
 
     //clears the value of all inputs
@@ -62,12 +120,5 @@ public class InventoryPage extends BasePage {
         for (Input input : allInputs) {
             input.setInput("");
         }
-    }
-
-    private void addItemToInventory() {
-        Object[] inputValues = getInputValue();
-        for (Object value : inputValues) System.out.println(value);
-
-        clearInputValue();
     }
 }
