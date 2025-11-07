@@ -8,8 +8,8 @@ import java.awt.*;
 
 public class MainFrame extends JFrame {
 
-    private CardLayout cardLayout = new CardLayout();
-    private JPanel mainPanel = new JPanel(cardLayout);
+    private final CardLayout cardLayout = new CardLayout();
+    private final JPanel mainPanel = new JPanel(cardLayout);
 
     public MainFrame() {
         setUpMainFrame();
@@ -36,7 +36,6 @@ public class MainFrame extends JFrame {
     }
 
     public void setUpPages() {
-        //add sidebar to the main frame
         mainPanel.add(new HomePage(), "Home");
         mainPanel.add(new InventoryPage(), "Inventory");
         mainPanel.add(new SettingsPage(), "Settings");
