@@ -32,16 +32,12 @@ public class InventoryPage extends BasePage {
         //add padding to the table
         inventoryTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        //initialize delete item button
-        Button deleteButton = new Button("Delete Selected Item", e -> deleteSelectedItem());
-        deleteButton.setForeground(Color.red);
-
         //add the panel containing all inputs
         add(inputs(), BorderLayout.WEST);
         //add table
         add(inventoryTable, BorderLayout.CENTER);
-        //add delete button
-        add(deleteButton, BorderLayout.SOUTH);
+        //add delete button and sort buttons
+        add(buttons(), BorderLayout.SOUTH);
     }
 
     //creates a panel containing all inputs and the add button
@@ -67,6 +63,31 @@ public class InventoryPage extends BasePage {
 
         panel.add(addButton);
         panel.add(clearButton);
+
+        return panel;
+    }
+
+    private JPanel buttons() {
+        JPanel panel = new JPanel();
+
+        //initialize delete item button
+        Button deleteButton = new Button("Delete Selected Item", e -> deleteSelectedItem());
+        deleteButton.setForeground(Color.red);
+
+        //initialize sort buttons
+        Button sortByName = new Button("Sort by Name", e -> {sortBy("name");});
+        Button sortByPrice = new Button("Sort by Price", e -> {sortBy("price");});
+        Button sortByQty = new Button("Sort by Quantity", e -> {sortBy("qty");});
+        Button sortByCategory = new Button("Sort by Category", e -> {sortBy("category");});
+        Button sortByDate = new Button("Sort by Date added", e -> {sortBy("date");});
+
+        //add to panel
+        panel.add(deleteButton);
+        panel.add(sortByName);
+        panel.add(sortByPrice);
+        panel.add(sortByQty);
+        panel.add(sortByCategory);
+        panel.add(sortByDate);
 
         return panel;
     }
@@ -130,6 +151,20 @@ public class InventoryPage extends BasePage {
 
         //remove item from the inventory class' arrayList and update the table
         inventory.getItems().remove(selectedRow);
+        inventoryTable.update(inventory.getItems());
+    }
+
+    //for sorting
+    private void sortBy(String type) {
+        switch(type) {
+            case "name" -> inventory.sortByName();
+            case "price" -> inventory.sortByPrice();
+            case "qty" -> inventory.sortByQty();
+            case "category" -> inventory.sortByCategory();
+            case "date" -> inventory.sortByDateAdded();
+        }
+
+        //update the inventory table
         inventoryTable.update(inventory.getItems());
     }
 
