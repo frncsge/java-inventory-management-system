@@ -13,8 +13,15 @@ public class InventoryTable extends JPanel {
     private ArrayList<Item> items;
 
     public InventoryTable() {
-        String[] cols = {"Item", "Price", "Quantity", "Category"};
-        tableModel = new DefaultTableModel(cols, 0);
+        String[] cols = {"Item", "Price", "Quantity", "Category", "Date added"};
+        tableModel = new DefaultTableModel(cols, 0) {
+            //prevent date col from being edited
+            @Override
+            public boolean isCellEditable(int row, int col) {
+                return col != 4;
+            }
+        };
+
         table = new JTable(tableModel);
 
         //listen for edits in the table
@@ -43,7 +50,8 @@ public class InventoryTable extends JPanel {
                 item.getName(),
                 item.getPrice(),
                 item.getQty(),
-                item.getCategory()
+                item.getCategory(),
+                item.getDateTime()
             });
         }
     }

@@ -29,13 +29,12 @@ public class InventoryPage extends BasePage {
         inventory = new Inventory();
         inventoryTable = new InventoryTable();
 
-        //initialize delete item button
-        Button deleteButton = new Button("Delete Selected Item", e -> deleteSelectedItem());
-        deleteButton.setOpaque(true);
-        deleteButton.setForeground(Color.red);
-
         //add padding to the table
         inventoryTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        //initialize delete item button
+        Button deleteButton = new Button("Delete Selected Item", e -> deleteSelectedItem());
+        deleteButton.setForeground(Color.red);
 
         //add the panel containing all inputs
         add(inputs(), BorderLayout.WEST);
