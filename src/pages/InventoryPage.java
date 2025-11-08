@@ -29,14 +29,20 @@ public class InventoryPage extends BasePage {
         inventory = new Inventory();
         inventoryTable = new InventoryTable();
 
+        //initialize delete item button
+        Button deleteButton = new Button("Delete Selected Item", e -> deleteSelectedItem());
+        deleteButton.setOpaque(true);
+        deleteButton.setForeground(Color.red);
+
         //add padding to the table
         inventoryTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         //add the panel containing all inputs
         add(inputs(), BorderLayout.WEST);
-
         //add table
         add(inventoryTable, BorderLayout.CENTER);
+        //add delete button
+        add(deleteButton, BorderLayout.SOUTH);
     }
 
     //creates a panel containing all inputs and the add button
@@ -56,8 +62,10 @@ public class InventoryPage extends BasePage {
             panel.add(input); //add input to the panel
         }
 
+        //add and clear buttons
         Button addButton = new Button("Add", e -> addItemToInventory());
         Button clearButton = new Button("Clear", e -> clearInputValue());
+
         panel.add(addButton);
         panel.add(clearButton);
 
@@ -111,6 +119,19 @@ public class InventoryPage extends BasePage {
 
         //clear input if item is added
         clearInputValue();
+    }
+
+    //for deleting an item in the table and inventory
+    private void deleteSelectedItem() {
+        int selectedRow = inventoryTable.getTable().getSelectedRow(); //returns the index of the item from the table
+        if(selectedRow < 0) {
+            new ErrorAlert("No Selected Item", "You need to select an item from the table to delete.");
+            return;
+        }
+
+        //remove item from the inventory class' arrayList and update the table
+        inventory.getItems().remove(selectedRow);
+        inventoryTable.update(inventory.getItems());
     }
 
     //clears the value of all inputs

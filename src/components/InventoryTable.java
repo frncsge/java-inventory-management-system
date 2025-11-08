@@ -10,18 +10,33 @@ import java.util.ArrayList;
 public class InventoryTable extends JPanel {
     private final DefaultTableModel tableModel;
     private final JTable table;
+    private ArrayList<Item> items;
 
     public InventoryTable() {
         String[] cols = {"Item", "Price", "Quantity", "Category"};
         tableModel = new DefaultTableModel(cols, 0);
         table = new JTable(tableModel);
 
+        //listen for edits in the table
+        tableModel.addTableModelListener(e -> {
+            //get the row and col (both return their index in the table)
+            int row = e.getFirstRow();
+            int col = e.getColumn();
+
+            //ignore if table is empty or is being updated
+            if(row < 0 || col < 0 || this.items == null) return;
+
+            Object newValue = tableModel.getValueAt(row, col);
+            updateItem(row, col, newValue);
+        });
+
         setLayout(new BorderLayout());
         add(new JScrollPane(table), BorderLayout.CENTER);
     }
 
     public void update(ArrayList<Item> items) {
-        tableModel.setRowCount(0);
+        this.items = items;
+        tableModel.setRowCount(0); //reset the rows back to 0 to avoid duplication
 
         for (Item item : items) {
             tableModel.addRow(new Object[]{
@@ -31,5 +46,20 @@ public class InventoryTable extends JPanel {
                 item.getCategory()
             });
         }
+    }
+
+    private void updateItem(int row, int col, Object newValue) {
+        Item item = items.get(row);
+
+        switch (col){
+            case 0 -> item.setName(newValue.toString());
+            case 1 -> item.setPrice(new java.math.BigDecimal(newValue.toString()));
+            case 2 -> item.setQty(Integer.parseInt(newValue.toString()));
+            case 3 -> item.setCategory(newValue.toString());
+        }
+    }
+
+    public JTable getTable() {
+        return table;
     }
 }
