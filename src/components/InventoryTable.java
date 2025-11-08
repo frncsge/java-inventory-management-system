@@ -3,9 +3,12 @@ package components;
 import models.Item;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class InventoryTable extends JPanel {
     private final DefaultTableModel tableModel;
@@ -14,6 +17,8 @@ public class InventoryTable extends JPanel {
 
     public InventoryTable() {
         String[] cols = {"Item", "Price", "Quantity", "Category", "Date added"};
+
+        //initialize table model and the table
         tableModel = new DefaultTableModel(cols, 0) {
             //prevent date col from being edited
             @Override
@@ -21,10 +26,28 @@ public class InventoryTable extends JPanel {
                 return col != 4;
             }
         };
+        table = new JTable(tableModel) {
+            @Override
+            public Component prepareRenderer(TableCellRenderer renderer, int row, int col) {
+                Component cell = super.prepareRenderer(renderer, row, col);
 
-        table = new JTable(tableModel);
+                //get the quantity of the row
+                int qty = (int) getModel().getValueAt(row, 2);
 
-        //listen for edits in the table
+                //check if qty is low
+                if (qty <= 5) {
+                    cell.setForeground(Color.RED);
+                } else if (qty <= 10) {
+                    cell.setForeground(Color.ORANGE);
+                } else {
+                    cell.setForeground(Color.BLACK);
+                }
+
+                return cell;
+            }
+        };
+
+        //makes the tableModel listen for events like editing the value in a column
         tableModel.addTableModelListener(e -> {
             //get the row and col (both return their index in the table)
             int row = e.getFirstRow();
