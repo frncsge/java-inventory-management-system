@@ -1,25 +1,25 @@
 package models;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public class Item {
 
-    private static int idCounter = 1;
-
     private String name, category;
     private BigDecimal price;
-    private int id, qty;
+    private int qty;
+    private LocalDate date;
 
     public Item(String name, BigDecimal price, int qty, String category) {
-        this.id = idCounter++;
         this.name = name;
         this.price = price;
         this.qty = qty;
         this.category = category;
+        this.date = LocalDate.now();
     }
 
     //getters
-    public int getId() { return this.id; }
+    public LocalDate getDate() { return this.date; }
     public String getName() { return this.name; }
     public BigDecimal getPrice() { return this.price; }
     public int getQty() { return this.qty; }
