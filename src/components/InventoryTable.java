@@ -3,12 +3,10 @@ package components;
 import models.Item;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class InventoryTable extends JPanel {
     private final DefaultTableModel tableModel;
