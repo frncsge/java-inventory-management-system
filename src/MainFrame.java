@@ -29,13 +29,13 @@ public class MainFrame extends JFrame {
         add(mainPanel, BorderLayout.CENTER);
     }
 
-    public void setUpMainFrame() {
+    private void setUpMainFrame() {
         setTitle("Inventory Management System");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
-    public void setUpPages() {
+    private void setUpPages() {
         mainPanel.add(new HomePage(), "Home");
         mainPanel.add(new InventoryPage(), "Inventory");
         mainPanel.add(new SettingsPage(), "Settings");
