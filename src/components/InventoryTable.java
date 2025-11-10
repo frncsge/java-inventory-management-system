@@ -30,7 +30,8 @@ public class InventoryTable extends JPanel {
                 Component cell = super.prepareRenderer(renderer, row, col);
 
                 //get the quantity of the row
-                int qty = (int) getModel().getValueAt(row, 2);
+                Object value = getModel().getValueAt(row, 2);
+                int qty = Integer.parseInt(value.toString());
 
                 //check if qty is low
                 if (qty <= 5) {
