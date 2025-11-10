@@ -1,29 +1,25 @@
 package pages;
 
+import components.*;
 import components.Button;
-import components.ErrorAlert;
-import components.Input;
-import components.InventoryTable;
 import models.Inventory;
 import models.Item;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 public class InventoryPage extends BasePage {
     Input nameInput, priceInput, qtyInput, categoryInput;
     private Inventory inventory;
     private InventoryTable inventoryTable;
+    private SearchBar searchBar;
+    private ArrayList<Item> currDisplayedItems;
 
     @Override
     public void setUI() {
         setLayout(new BorderLayout());
-
-        //title label
-        JLabel titleLabel = new JLabel("Inventory", SwingConstants.CENTER);
-        add(titleLabel, BorderLayout.NORTH);
 
         //initialize inventory and inventoryTable
         inventory = new Inventory();
@@ -32,12 +28,17 @@ public class InventoryPage extends BasePage {
         //add padding to the table
         inventoryTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
+        //create search bar
+        searchBar = new SearchBar(e -> searchItem(), e -> showAllItem());
+
         //add the panel containing all inputs
         add(inputs(), BorderLayout.WEST);
         //add table
         add(inventoryTable, BorderLayout.CENTER);
         //add delete button and sort buttons
         add(buttons(), BorderLayout.SOUTH);
+        //add search bar
+        add(searchBar, BorderLayout.NORTH);
     }
 
     //creates a panel containing all inputs and the add button
@@ -82,12 +83,12 @@ public class InventoryPage extends BasePage {
         Button sortByDate = new Button("Sort by Date added", e -> {sortBy("date");});
 
         //add to panel
-        panel.add(deleteButton);
         panel.add(sortByName);
         panel.add(sortByPrice);
         panel.add(sortByQty);
         panel.add(sortByCategory);
         panel.add(sortByDate);
+        panel.add(deleteButton);
 
         return panel;
     }
@@ -135,10 +136,30 @@ public class InventoryPage extends BasePage {
 
         //add item to inventory and update table
         inventory.addItem(new Item(name, price, qty, category));
-        inventoryTable.update(inventory.getItems());
+        currDisplayedItems = new ArrayList<>(inventory.getItems());
+        inventoryTable.update(currDisplayedItems);
 
         //clear input if item is added
         clearInputValue();
+    }
+
+    private void searchItem() {
+        String query = searchBar.getQuery();
+
+        //create a new array list containing a filtered inventory based on the query/search
+        currDisplayedItems = new ArrayList<>(
+                inventory.getItems().stream()
+                        .filter(item -> item.getName().toLowerCase().contains(query))
+                        .toList()
+        );
+
+        //update the table
+        inventoryTable.update(currDisplayedItems);
+    }
+
+    private void showAllItem() {
+        currDisplayedItems = new ArrayList<>(inventory.getItems());
+        inventoryTable.update(currDisplayedItems);
     }
 
     //for deleting an item in the table and inventory
@@ -149,9 +170,17 @@ public class InventoryPage extends BasePage {
             return;
         }
 
-        //remove item from the inventory class' arrayList and update the table
-        inventory.getItems().remove(selectedRow);
-        inventoryTable.update(inventory.getItems());
+        //get the actual object from the currently displayed items
+        Item itemToDelete = currDisplayedItems.get(selectedRow);
+
+        //remove item from the inventory
+        inventory.getItems().remove(itemToDelete);
+
+        //remove from the displayed list
+        currDisplayedItems.remove(itemToDelete);
+
+        //update the inventory table
+        inventoryTable.update(currDisplayedItems);
     }
 
     //for sorting
@@ -165,7 +194,8 @@ public class InventoryPage extends BasePage {
         }
 
         //update the inventory table
-        inventoryTable.update(inventory.getItems());
+        currDisplayedItems = new ArrayList<>(inventory.getItems());
+        inventoryTable.update(currDisplayedItems);
     }
 
     //clears the value of all inputs
