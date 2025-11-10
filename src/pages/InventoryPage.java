@@ -76,11 +76,11 @@ public class InventoryPage extends BasePage {
         deleteButton.setForeground(Color.red);
 
         //initialize sort buttons
-        Button sortByName = new Button("Sort by Name", e -> {sortBy("name");});
-        Button sortByPrice = new Button("Sort by Price", e -> {sortBy("price");});
-        Button sortByQty = new Button("Sort by Quantity", e -> {sortBy("qty");});
-        Button sortByCategory = new Button("Sort by Category", e -> {sortBy("category");});
-        Button sortByDate = new Button("Sort by Date added", e -> {sortBy("date");});
+        Button sortByName = new Button("Sort by Name", e -> sortBy("name"));
+        Button sortByPrice = new Button("Sort by Price", e -> sortBy("price"));
+        Button sortByQty = new Button("Sort by Quantity", e -> sortBy("qty"));
+        Button sortByCategory = new Button("Sort by Category", e -> sortBy("category"));
+        Button sortByDate = new Button("Sort by Date added", e -> sortBy("date"));
 
         //add to panel
         panel.add(sortByName);
@@ -155,6 +155,9 @@ public class InventoryPage extends BasePage {
 
         //update the table
         inventoryTable.update(currDisplayedItems);
+
+        //clear search bar
+        searchBar.clear();
     }
 
     private void showAllItem() {
