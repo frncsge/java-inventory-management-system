@@ -153,21 +153,14 @@ public class SettingsPage extends JPanel {
                 parentFrame.setVisible(true);
             }
 
-            applyThemeToFrame(parentFrame, dark);
+            // FIXED: Only apply theme to SettingsPage, not the entire frame
+            updateComponentColor(this, dark);
         }
 
         title.setForeground(text);
         setBackground(bg);
         scrollPane.getViewport().setBackground(bg);
         repaint();
-    }
-
-    private void applyThemeToFrame(Container container, boolean dark) {
-        for (Component comp : container.getComponents()) {
-            updateComponentColor(comp, dark);
-            if (comp instanceof Container)
-                applyThemeToFrame((Container) comp, dark);
-        }
     }
 
     private void updateComponentColor(Component comp, boolean dark) {

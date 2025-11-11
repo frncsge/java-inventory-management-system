@@ -38,7 +38,7 @@ public class InventoryPage extends BasePage {
         //add table
         add(inventoryTable, BorderLayout.CENTER);
         //add delete button and sort buttons
-        add(buttons(), BorderLayout.SOUTH);
+        add(new JScrollPane(buttons()), BorderLayout.SOUTH);
         //add search bar
         add(searchBar, BorderLayout.NORTH);
     }
@@ -78,21 +78,40 @@ public class InventoryPage extends BasePage {
         deleteButton.setForeground(Color.red);
 
         //initialize sort buttons
-        Button sortByName = new Button("Sort by Name", e -> sortBy("name"));
-        Button sortByPrice = new Button("Sort by Price", e -> sortBy("price"));
-        Button sortByQty = new Button("Sort by Quantity", e -> sortBy("qty"));
-        Button sortByCategory = new Button("Sort by Category", e -> sortBy("category"));
-        Button sortByDate = new Button("Sort by Date added", e -> sortBy("date"));
+        Button sortByNameAsc = new Button("Sort by Name ↑", e -> sortBy("name", "asc"));
+        Button sortByNameDesc = new Button("Sort by Name ↓", e -> sortBy("name", "desc"));
+
+        Button sortByPriceAsc = new Button("Sort by Price ↑", e -> sortBy("price", "asc"));
+        Button sortByPriceDesc = new Button("Sort by Price ↓", e -> sortBy("price", "desc"));
+
+        Button sortByQtyAsc = new Button("Sort by Quantity ↑", e -> sortBy("qty", "asc"));
+        Button sortByQtyDesc = new Button("Sort by Quantity ↓", e -> sortBy("qty", "desc"));
+
+        Button sortByCategoryAsc = new Button("Sort by Category ↑", e -> sortBy("category", "asc"));
+        Button sortByCategoryDesc = new Button("Sort by Category ↓", e -> sortBy("category", "desc"));
+
+        Button sortByDateAsc = new Button("Sort by Date added ↑", e -> sortBy("date", "asc"));
+        Button sortByDateDesc = new Button("Sort by Date added ↓", e -> sortBy("date", "desc"));
 
         //add to panel
-        panel.add(sortByName);
-        panel.add(sortByPrice);
-        panel.add(sortByQty);
-        panel.add(sortByCategory);
-        panel.add(sortByDate);
+        panel.add(createButtonGroup(sortByNameAsc, sortByNameDesc));
+        panel.add(createButtonGroup(sortByPriceAsc, sortByPriceDesc));
+        panel.add(createButtonGroup(sortByQtyAsc, sortByQtyDesc));
+        panel.add(createButtonGroup(sortByCategoryAsc, sortByCategoryDesc));
+        panel.add(createButtonGroup(sortByDateAsc, sortByDateDesc));
+
         panel.add(deleteButton);
 
         return panel;
+    }
+
+    private JPanel createButtonGroup(JButton ascButton, JButton descButton) {
+        JPanel group = new JPanel();
+        group.setLayout(new BoxLayout(group, BoxLayout.Y_AXIS));
+        group.add(ascButton);
+        group.add(descButton);
+
+        return group;
     }
 
     private void addItemToInventory() {
@@ -189,13 +208,14 @@ public class InventoryPage extends BasePage {
     }
 
     //for sorting
-    private void sortBy(String type) {
+    private void sortBy(String type, String order) {
+
         switch(type) {
-            case "name" -> inventory.sortByName();
-            case "price" -> inventory.sortByPrice();
-            case "qty" -> inventory.sortByQty();
-            case "category" -> inventory.sortByCategory();
-            case "date" -> inventory.sortByDateAdded();
+            case "name" -> inventory.sortByName(order);
+            case "price" -> inventory.sortByPrice(order);
+            case "qty" -> inventory.sortByQty(order);
+            case "category" -> inventory.sortByCategory(order);
+            case "date" -> inventory.sortByDateAdded(order);
         }
 
         //update the inventory table

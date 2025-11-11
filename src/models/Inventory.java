@@ -16,23 +16,38 @@ public class Inventory {
         return items;
     }
 
-    public void sortByName() {
-        items.sort(Comparator.comparing(item -> item.getName(), String.CASE_INSENSITIVE_ORDER));
+    public void sortByName(String order) {
+        switch (order) {
+            case "asc" -> items.sort(Comparator.comparing(item -> item.getName(), String.CASE_INSENSITIVE_ORDER));
+            case "desc" -> items.sort(Comparator.comparing((Item item) -> item.getName(), String.CASE_INSENSITIVE_ORDER).reversed());
+        }
     }
 
-    public void sortByPrice() {
-        items.sort(Comparator.comparing((Item item) -> item.getPrice()).reversed());
+    public void sortByPrice(String order) {
+        switch (order) {
+            case "asc" -> items.sort(Comparator.comparing((Item item) -> item.getPrice()));
+            case "desc" -> items.sort(Comparator.comparing((Item item) -> item.getPrice()).reversed());
+        }
     }
 
-    public void sortByQty() {
-        items.sort(Comparator.comparing((Item item) -> item.getQty()).reversed());
+    public void sortByQty(String order) {
+        switch (order) {
+            case "asc" -> items.sort(Comparator.comparing((Item item) -> item.getQty()));
+            case "desc" -> items.sort(Comparator.comparing((Item item) -> item.getQty()).reversed());
+        }
     }
 
-    public void sortByCategory() {
-        items.sort(Comparator.comparing(item -> item.getCategory(), String.CASE_INSENSITIVE_ORDER));
+    public void sortByCategory(String order) {
+        switch (order) {
+            case "asc" -> items.sort(Comparator.comparing(item -> item.getCategory(), String.CASE_INSENSITIVE_ORDER));
+            case "desc" -> items.sort(Comparator.comparing((Item item) -> item.getCategory(), String.CASE_INSENSITIVE_ORDER).reversed());
+         }
     }
 
-    public void sortByDateAdded() {
-        items.sort(Comparator.comparing((Item item )-> item.getDateTime()).reversed());
+    public void sortByDateAdded(String order) {
+        switch (order) {
+            case "asc" -> items.sort(Comparator.comparing((Item item )-> item.getDateTime()));
+            case "desc" -> items.sort(Comparator.comparing((Item item )-> item.getDateTime()).reversed());
+        }
     }
 }
