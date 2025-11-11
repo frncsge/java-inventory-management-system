@@ -1,14 +1,13 @@
 package pages;
 
+import models.Inventory;
+import components.InventoryTable;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
 
 public class SettingsPage extends JPanel {
 
     // Fields
-    private JTextField storeNameField, addressField, contactField;
     private JCheckBox darkModeToggle;
     private Color lightBg = Color.WHITE;
     private Color darkBg = new Color(30, 30, 30);
@@ -17,12 +16,21 @@ public class SettingsPage extends JPanel {
     private Color darkPanel = new Color(50, 50, 50);
     private Color darkField = new Color(70, 70, 70);
 
-    private JFrame parentFrame; // for applying dark mode on whole frame
+    private JFrame parentFrame;
     private JLabel title;
     private JScrollPane scrollPane;
 
     // Static variable to store dark mode state across all pages
     private static boolean isDarkMode = false;
+
+    // Static references shared between pages
+    private static Inventory sharedInventory = null;
+    private static InventoryTable sharedInventoryTable = null;
+
+    // Store original window state
+    private Dimension originalSize;
+    private int originalState;
+    private boolean wasMaximized;
 
     public SettingsPage() {
         setLayout(new BorderLayout());
@@ -36,21 +44,9 @@ public class SettingsPage extends JPanel {
 
         // ===== MAIN PANEL =====
         JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayout(4, 1, 10, 10));
+        mainPanel.setLayout(new GridLayout(3, 1, 10, 10));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
         mainPanel.setBackground(isDarkMode ? darkPanel : lightBg);
-
-        // ===== STORE INFORMATION =====
-        JPanel storeInfoPanel = createSectionPanel("🏪 Store Information");
-        storeNameField = new JTextField("freshmart", 10);
-        addressField = new JTextField("Tagbilaran Bohol", 10);
-        contactField = new JTextField("0955223344", 10);
-        storeInfoPanel.add(new JLabel("Store Name:"));
-        storeInfoPanel.add(storeNameField);
-        storeInfoPanel.add(new JLabel("Address:"));
-        storeInfoPanel.add(addressField);
-        storeInfoPanel.add(new JLabel("Contact Number:"));
-        storeInfoPanel.add(contactField);
 
         // ===== SYSTEM APPEARANCE =====
         JPanel appearancePanel = createSectionPanel("🎨 System Appearance");
@@ -58,16 +54,15 @@ public class SettingsPage extends JPanel {
         darkModeToggle.setSelected(isDarkMode);
         appearancePanel.add(darkModeToggle);
 
-        // ===== SYSTEM MAINTENANCE =====
-        JPanel maintenancePanel = createSectionPanel("💾 System Maintenance");
-        JButton backupButton = new JButton("Backup Data");
-        JButton restoreButton = new JButton("Restore Data");
-        JButton clearButton = new JButton("Clear Store Info");
-        JButton exitButton = new JButton("Exit Program"); // 🔹 NEW BUTTON
-        maintenancePanel.add(backupButton);
-        maintenancePanel.add(restoreButton);
-        maintenancePanel.add(clearButton);
-        maintenancePanel.add(exitButton); // 🔹 Add Exit Button
+        // ===== SYSTEM CONTROLS =====
+        JPanel controlsPanel = createSectionPanel("🎮 System Controls");
+        JButton clearInventoryButton = new JButton("Clear Inventory");
+        JButton exitButton = new JButton("Exit Program");
+
+        clearInventoryButton.setForeground(Color.RED);
+
+        controlsPanel.add(clearInventoryButton);
+        controlsPanel.add(exitButton);
 
         // ===== ABOUT SYSTEM =====
         JPanel aboutPanel = createSectionPanel("ℹ️ About System");
@@ -82,9 +77,8 @@ public class SettingsPage extends JPanel {
         aboutPanel.add(aboutText);
 
         // ===== ADD SECTIONS =====
-        mainPanel.add(storeInfoPanel);
         mainPanel.add(appearancePanel);
-        mainPanel.add(maintenancePanel);
+        mainPanel.add(controlsPanel);
         mainPanel.add(aboutPanel);
 
         scrollPane = new JScrollPane(mainPanel);
@@ -96,15 +90,22 @@ public class SettingsPage extends JPanel {
 
         // ===== EVENT HANDLERS =====
         darkModeToggle.addActionListener(e -> toggleDarkMode());
-        backupButton.addActionListener(e -> backupData());
-        restoreButton.addActionListener(e -> restoreData());
-        clearButton.addActionListener(e -> clearData());
-        exitButton.addActionListener(e -> exitProgram()); // 🔹 Exit Button Function
+        clearInventoryButton.addActionListener(e -> clearInventory());
+        exitButton.addActionListener(e -> exitProgram());
 
         // Apply theme if dark mode was already enabled
         if (isDarkMode) {
             updateComponentColor(this, true);
         }
+    }
+
+    // Static methods to share data from InventoryPage
+    public static void setInventory(Inventory inventory) {
+        sharedInventory = inventory;
+    }
+
+    public static void setInventoryTable(InventoryTable table) {
+        sharedInventoryTable = table;
     }
 
     private JPanel createSectionPanel(String title) {
@@ -124,8 +125,12 @@ public class SettingsPage extends JPanel {
             parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
 
         if (parentFrame != null) {
-            // Fullscreen dark mode
+            // Save original size and state before enabling dark mode
             if (dark) {
+                originalSize = parentFrame.getSize();
+                originalState = parentFrame.getExtendedState();
+                wasMaximized = (originalState & JFrame.MAXIMIZED_BOTH) == JFrame.MAXIMIZED_BOTH;
+
                 parentFrame.dispose();
                 parentFrame.setUndecorated(true);
                 parentFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -133,8 +138,18 @@ public class SettingsPage extends JPanel {
             } else {
                 parentFrame.dispose();
                 parentFrame.setUndecorated(false);
-                parentFrame.setExtendedState(JFrame.NORMAL);
-                parentFrame.setSize(900, 700);
+
+                if (wasMaximized) {
+                    parentFrame.setExtendedState(originalState);
+                } else {
+                    parentFrame.setExtendedState(JFrame.NORMAL);
+                    if (originalSize != null) {
+                        parentFrame.setSize(originalSize);
+                    } else {
+                        parentFrame.setSize(900, 700);
+                    }
+                }
+
                 parentFrame.setVisible(true);
             }
 
@@ -190,42 +205,35 @@ public class SettingsPage extends JPanel {
         }
     }
 
-    private void backupData() {
-        try (PrintWriter writer = new PrintWriter("settings_backup.txt")) {
-            writer.println(storeNameField.getText());
-            writer.println(addressField.getText());
-            writer.println(contactField.getText());
-            writer.println(isDarkMode);
-            JOptionPane.showMessageDialog(this, "✅ Backup saved successfully!");
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "⚠️ Error saving backup!");
+    private void clearInventory() {
+        if (sharedInventory == null) {
+            JOptionPane.showMessageDialog(this, "⚠️ Inventory not available!");
+            return;
         }
-    }
 
-    private void restoreData() {
-        try (BufferedReader reader = new BufferedReader(new FileReader("settings_backup.txt"))) {
-            storeNameField.setText(reader.readLine());
-            addressField.setText(reader.readLine());
-            contactField.setText(reader.readLine());
-            boolean dark = Boolean.parseBoolean(reader.readLine());
-            if (dark != isDarkMode) {
-                darkModeToggle.setSelected(dark);
-                toggleDarkMode();
+        // 🔹 Check if inventory is empty
+        if (sharedInventory.getItems().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "📭 No Inventory Listed!");
+            return;
+        }
+
+        int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "Are you sure you want to clear all items from the inventory?\nThis action cannot be undone.",
+                "Clear Inventory Confirmation",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+        );
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            sharedInventory.getItems().clear();
+            if (sharedInventoryTable != null) {
+                sharedInventoryTable.update(sharedInventory.getItems());
             }
-            JOptionPane.showMessageDialog(this, "✅ Data restored successfully!");
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "⚠️ No backup found!");
+            JOptionPane.showMessageDialog(this, "🧹 Inventory cleared successfully!");
         }
     }
 
-    private void clearData() {
-        storeNameField.setText("");
-        addressField.setText("");
-        contactField.setText("");
-        JOptionPane.showMessageDialog(this, "🧹 Cleared all store info!");
-    }
-
-    // 🔹 EXIT PROGRAM FUNCTION
     private void exitProgram() {
         int confirm = JOptionPane.showConfirmDialog(
                 this,

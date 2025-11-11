@@ -25,6 +25,8 @@ public class InventoryPage extends BasePage {
         inventory = new Inventory();
         inventoryTable = new InventoryTable();
 
+         SettingsPage.setInventory(inventory);
+         SettingsPage.setInventoryTable(inventoryTable);
         //add padding to the table
         inventoryTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
