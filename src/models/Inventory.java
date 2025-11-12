@@ -1,5 +1,6 @@
 package models;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -16,6 +17,36 @@ public class Inventory {
         return items;
     }
 
+    // === NEW METHODS FOR HOMEPAGE ===
+    
+    // Get total number of items
+    public int getTotalItems() {
+        return items.size();
+    }
+
+    // Get count of low stock items (quantity <= 5)
+    public int getLowStockCount() {
+        int count = 0;
+        for (Item item : items) {
+            if (item.getQty() <= 5) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    // Get total stock value (sum of price * quantity for all items)
+    public BigDecimal getTotalStockValue() {
+        BigDecimal total = BigDecimal.ZERO;
+        for (Item item : items) {
+            BigDecimal itemValue = item.getPrice().multiply(BigDecimal.valueOf(item.getQty()));
+            total = total.add(itemValue);
+        }
+        return total;
+    }
+
+    // === EXISTING SORTING METHODS ===
+    
     public void sortByName(String order) {
         switch (order) {
             case "asc" -> items.sort(Comparator.comparing(item -> item.getName(), String.CASE_INSENSITIVE_ORDER));
