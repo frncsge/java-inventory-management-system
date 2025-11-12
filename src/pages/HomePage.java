@@ -1,6 +1,6 @@
 package pages;
 
-import components.Input;
+import models.Inventory;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -12,9 +12,11 @@ public class HomePage extends BasePage {
     private JLabel lowStockLabel;
     private JLabel totalValueLabel;
     private JLabel currentDateLabel;
+    private Inventory inventory;
 
-    public HomePage(MainFrame mainFrame) {
+    public HomePage(MainFrame mainFrame, Inventory inventory) {
         super(mainFrame);
+        this.inventory = inventory;
         setUI();
     }
 
@@ -115,8 +117,8 @@ public class HomePage extends BasePage {
         JButton addItemBtn = createActionButton("Add New Item", new Color(155, 89, 182));
 
         refreshBtn.addActionListener(e -> refreshData());
-        viewInventoryBtn.addActionListener(e -> getMainFrame().navigateTo("INVENTORY"));
-        addItemBtn.addActionListener(e -> getMainFrame().navigateTo("INVENTORY"));
+        viewInventoryBtn.addActionListener(e -> getMainFrame().navigateTo("Inventory"));
+        addItemBtn.addActionListener(e -> getMainFrame().navigateTo("Inventory"));
 
         actionsPanel.add(refreshBtn);
         actionsPanel.add(viewInventoryBtn);
@@ -138,13 +140,11 @@ public class HomePage extends BasePage {
     }
 
     public void refreshData() {
-        // Get inventory from MainFrame or however you're managing it
-        if (getMainFrame().getInventory() != null) {
-            var inventory = getMainFrame().getInventory();
+        if (inventory != null) {
             // Update metrics using the existing Inventory class
             totalItemsLabel.setText(String.valueOf(inventory.getTotalItems()));
             lowStockLabel.setText(String.valueOf(inventory.getLowStockCount()));
-            totalValueLabel.setText(String.format("$%.2f", inventory.getTotalStockValue()));
+            totalValueLabel.setText("$" + inventory.getTotalStockValue());
             currentDateLabel.setText(getCurrentDate());
         }
     }
