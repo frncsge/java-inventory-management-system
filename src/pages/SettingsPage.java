@@ -168,7 +168,7 @@ public class SettingsPage extends BasePage {
     private void applyDarkTheme(Component comp) {
 
         if (comp instanceof JLabel ||
-            comp instanceof JButton ||
+//            comp instanceof JButton ||
             comp instanceof JCheckBox ||
             comp instanceof JTextField ||
             comp instanceof JTextArea) {
