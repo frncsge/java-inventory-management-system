@@ -7,7 +7,7 @@ import java.awt.*;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
-public class SettingsPage extends JPanel {
+public class SettingsPage extends BasePage {
 
     private JCheckBox darkModeToggle;
     private JFrame parentFrame;
@@ -31,7 +31,8 @@ public class SettingsPage extends JPanel {
     private JLabel title;
     private JScrollPane scrollPane;
 
-    public SettingsPage() {
+    @Override
+    public void setUI() {
 
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
@@ -119,6 +120,8 @@ public class SettingsPage extends JPanel {
             parentFrame.repaint();
             return;
         }
+
+        saveOriginalColors(parentFrame);
 
         applyDarkTheme(parentFrame);
         updateTableTheme(true); // ✅ apply table dark mode theme
