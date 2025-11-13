@@ -31,14 +31,19 @@ public class InventoryTable extends JPanel {
 
                 //get the quantity of the row
                 Object value = getModel().getValueAt(row, 2);
-                int qty = Integer.parseInt(value.toString());
 
-                //check if qty is low
-                if (qty <= 5) {
-                    cell.setForeground(Color.RED);
-                } else if (qty <= 10) {
-                    cell.setForeground(Color.ORANGE);
-                } else {
+                try {
+                    int qty = Integer.parseInt(value.toString());
+
+                    //check if qty is low
+                    if (qty <= 5) {
+                        cell.setForeground(Color.RED);
+                    } else if (qty <= 10) {
+                        cell.setForeground(Color.ORANGE);
+                    } else {
+                        cell.setForeground(Color.BLACK);
+                    }
+                } catch (NumberFormatException e) {
                     cell.setForeground(Color.BLACK);
                 }
 
@@ -48,6 +53,7 @@ public class InventoryTable extends JPanel {
 
         //makes the tableModel listen for events like editing the value in a column
         tableModel.addTableModelListener(e -> {
+
             //get the row and col (both return their index in the table)
             int row = e.getFirstRow();
             int col = e.getColumn();
@@ -80,12 +86,17 @@ public class InventoryTable extends JPanel {
 
     private void updateItem(int row, int col, Object newValue) {
         Item item = items.get(row);
+        Object oldValue = tableModel.getValueAt(row, col); //store the old value
 
-        switch (col){
-            case 0 -> item.setName(newValue.toString());
-            case 1 -> item.setPrice(new java.math.BigDecimal(newValue.toString()));
-            case 2 -> item.setQty(Integer.parseInt(newValue.toString()));
-            case 3 -> item.setCategory(newValue.toString());
+        try {
+            switch (col){
+                case 0 -> item.setName(newValue.toString());
+                case 1 -> item.setPrice(new java.math.BigDecimal(newValue.toString()));
+                case 2 -> item.setQty(Integer.parseInt(newValue.toString()));
+                case 3 -> item.setCategory(newValue.toString());
+            }
+        } catch (NumberFormatException e) {
+            new ErrorAlert("Invalid Input", "Price or Quantity must be a number.");
         }
     }
 
