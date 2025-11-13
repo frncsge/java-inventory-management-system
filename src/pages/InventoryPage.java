@@ -1,5 +1,6 @@
 package pages;
 
+import app.MainFrame;
 import components.*;
 import components.Button;
 import models.Inventory;
@@ -190,7 +191,7 @@ public class InventoryPage extends BasePage {
         searchBar.clear();
     }
 
-    private void showAllItem() {
+    public void showAllItem() {
         currDisplayedItems = new ArrayList<>(inventory.getItems());
         inventoryTable.update(currDisplayedItems);
     }
@@ -207,7 +208,7 @@ public class InventoryPage extends BasePage {
         Item itemToDelete = currDisplayedItems.get(selectedRow);
 
         // Remove item from the inventory
-        inventory.removeItem(itemToDelete);
+        inventory.getItems().remove(itemToDelete);
 
         // Remove from the displayed list
         currDisplayedItems.remove(itemToDelete);
@@ -238,6 +239,10 @@ public class InventoryPage extends BasePage {
         for (Input input : allInputs) {
             input.setInput("");
         }
+    }
+
+    public InventoryTable getInventoryTable() {
+        return inventoryTable;
     }
 
     @Override

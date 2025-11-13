@@ -1,5 +1,6 @@
 package pages;
 
+import app.MainFrame;
 import models.Inventory;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -61,7 +62,7 @@ public class HomePage extends BasePage {
         lowStockLabel = (JLabel) ((JPanel) lowStockCard.getComponent(1)).getComponent(0);
 
         // Total Stock Value Card
-        JPanel totalValueCard = createMetricCard("Total Stock Value", "$0.00", 
+        JPanel totalValueCard = createMetricCard("Total Stock Value", "₱0.00",
             new Color(39, 174, 96));
         totalValueLabel = (JLabel) ((JPanel) totalValueCard.getComponent(1)).getComponent(0);
 
@@ -144,7 +145,7 @@ public class HomePage extends BasePage {
             // Update metrics using the existing Inventory class
             totalItemsLabel.setText(String.valueOf(inventory.getTotalItems()));
             lowStockLabel.setText(String.valueOf(inventory.getLowStockCount()));
-            totalValueLabel.setText("$" + inventory.getTotalStockValue());
+            totalValueLabel.setText("₱" + inventory.getTotalStockValue());
             currentDateLabel.setText(getCurrentDate());
         }
     }
