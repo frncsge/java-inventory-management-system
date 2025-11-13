@@ -1,5 +1,6 @@
 package pages;
 
+import app.MainFrame;
 import components.*;
 import components.Button;
 import models.Inventory;

@@ -1,3 +1,5 @@
+package app;
+
 import pages.HomePage;
 import pages.InventoryPage;
 import pages.SettingsPage;
@@ -46,7 +48,7 @@ public class MainFrame extends JFrame {
         // Pass the shared inventory instance to all pages
         mainPanel.add(new HomePage(this, inventory), "Home");
         mainPanel.add(new InventoryPage(this, inventory), "Inventory");
-        mainPanel.add(new SettingsPage(this), "Settings"); // Settings might not need inventory
+//        mainPanel.add(new SettingsPage(this), "Settings"); // Settings might not need inventory
     }
 
     // Navigation method for pages to use

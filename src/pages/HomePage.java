@@ -1,5 +1,6 @@
 package pages;
 
+import app.MainFrame;
 import models.Inventory;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
