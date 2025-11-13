@@ -2,7 +2,7 @@ package app;
 
 import pages.HomePage;
 import pages.InventoryPage;
-import pages.SettingsPage;
+//import pages.SettingsPage;
 import components.SidebarPanel;
 import models.Inventory;
 

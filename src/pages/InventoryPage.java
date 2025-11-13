@@ -208,7 +208,7 @@ public class InventoryPage extends BasePage {
         Item itemToDelete = currDisplayedItems.get(selectedRow);
 
         // Remove item from the inventory
-        inventory.removeItem(itemToDelete);
+        inventory.getItems().remove(itemToDelete);
 
         // Remove from the displayed list
         currDisplayedItems.remove(itemToDelete);

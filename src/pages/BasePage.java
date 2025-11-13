@@ -10,7 +10,7 @@ public abstract class BasePage extends JPanel {
     //constructor with app.MainFrame parameter
     public BasePage(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
-        setUI();
+//        setUI();
     }
 
     //all subclasses of pages.BasePage must override this method
@@ -25,6 +25,6 @@ public abstract class BasePage extends JPanel {
     // Called when the page becomes visible (when navigated to)
     public void onPageSelected() {
         // Default implementation does nothing
-        // Subclasses can override to refresh data when page is shown
+        // Sub classes can override to refresh data when page is shown
     }
 }
