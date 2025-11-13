@@ -12,6 +12,7 @@ public class InventoryTable extends JPanel {
     private final DefaultTableModel tableModel;
     private final JTable table;
     private ArrayList<Item> items;
+    private static boolean isDarkMode = false;
 
     public InventoryTable() {
         String[] cols = {"Item", "Price", "Quantity", "Category", "Date added"};
@@ -31,6 +32,7 @@ public class InventoryTable extends JPanel {
 
                 //get the quantity of the row
                 Object value = getModel().getValueAt(row, 2);
+                Color textColor = null;
 
                 try {
                     int qty = Integer.parseInt(value.toString());
@@ -41,11 +43,13 @@ public class InventoryTable extends JPanel {
                     } else if (qty <= 10) {
                         cell.setForeground(Color.ORANGE);
                     } else {
-                        cell.setForeground(Color.BLACK);
+                        textColor = isDarkMode ? Color.WHITE : Color.BLACK;
                     }
                 } catch (NumberFormatException e) {
-                    cell.setForeground(Color.BLACK);
+                    textColor = isDarkMode ? Color.WHITE : Color.BLACK;
                 }
+
+                cell.setForeground(textColor);
 
                 return cell;
             }
@@ -98,6 +102,10 @@ public class InventoryTable extends JPanel {
         } catch (NumberFormatException e) {
             new ErrorAlert("Invalid Input", "Price or Quantity must be a number.");
         }
+    }
+
+    public void setDarkMode(boolean isDark) {
+        isDarkMode = isDark;
     }
 
     public JTable getTable() {

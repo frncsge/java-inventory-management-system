@@ -4,6 +4,7 @@ import app.MainFrame;
 import models.Inventory;
 import components.InventoryTable;
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -34,8 +35,9 @@ public class SettingsPage extends BasePage {
     private JLabel title;
     private JScrollPane scrollPane;
 
-    public SettingsPage(Inventory inventory, Runnable onInventoryChange) {
+    public SettingsPage(Inventory inventory, InventoryTable inventoryTable, Runnable onInventoryChange) {
         this.inventory = inventory;
+        sharedInventoryTable = inventoryTable;
         this.onInventoryChange = onInventoryChange;
         setUI();
     }
@@ -229,6 +231,8 @@ public class SettingsPage extends BasePage {
             table.setSelectionBackground(new Color(184, 207, 229)); // default blue highlight
             table.setSelectionForeground(Color.BLACK);
         }
+
+        sharedInventoryTable.setDarkMode(dark);
     }
 
     // ============================================================

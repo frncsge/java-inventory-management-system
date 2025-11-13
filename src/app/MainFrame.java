@@ -49,7 +49,7 @@ public class MainFrame extends JFrame {
         // Pass the shared inventory instance to all pages
         mainPanel.add(new HomePage(this, inventory), "Home");
         mainPanel.add(inventoryPage, "Inventory");
-        mainPanel.add(new SettingsPage(inventory, () -> inventoryPage.showAllItem()), "Settings");
+        mainPanel.add(new SettingsPage(inventory, inventoryPage.getInventoryTable(), () -> inventoryPage.showAllItem()), "Settings");
     }
 
     // Navigation method for pages to use

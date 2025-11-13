@@ -117,10 +117,6 @@ public class HomePage extends BasePage {
         JButton viewInventoryBtn = createActionButton("View Inventory", new Color(39, 174, 96));
         JButton addItemBtn = createActionButton("Add New Item", new Color(155, 89, 182));
 
-        refreshBtn.setForeground(new Color(41, 128, 185));
-        viewInventoryBtn.setForeground(new Color(39, 174, 96));
-        addItemBtn.setForeground(new Color(155, 89, 182));
-
         refreshBtn.addActionListener(e -> refreshData());
         viewInventoryBtn.addActionListener(e -> getMainFrame().navigateTo("Inventory"));
         addItemBtn.addActionListener(e -> getMainFrame().navigateTo("Inventory"));

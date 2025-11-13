@@ -241,6 +241,10 @@ public class InventoryPage extends BasePage {
         }
     }
 
+    public InventoryTable getInventoryTable() {
+        return inventoryTable;
+    }
+
     @Override
     public void onPageSelected() {
         // Refresh the table data when page is selected
