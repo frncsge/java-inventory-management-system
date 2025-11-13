@@ -191,7 +191,7 @@ public class InventoryPage extends BasePage {
         searchBar.clear();
     }
 
-    private void showAllItem() {
+    public void showAllItem() {
         currDisplayedItems = new ArrayList<>(inventory.getItems());
         inventoryTable.update(currDisplayedItems);
     }

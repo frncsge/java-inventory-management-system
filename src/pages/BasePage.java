@@ -13,6 +13,9 @@ public abstract class BasePage extends JPanel {
 //        setUI();
     }
 
+    protected BasePage() {
+    }
+
     //all subclasses of pages.BasePage must override this method
     protected abstract void setUI();
 

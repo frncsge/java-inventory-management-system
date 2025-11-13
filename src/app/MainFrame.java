@@ -2,7 +2,7 @@ package app;
 
 import pages.HomePage;
 import pages.InventoryPage;
-//import pages.SettingsPage;
+import pages.SettingsPage;
 import components.SidebarPanel;
 import models.Inventory;
 
@@ -45,10 +45,11 @@ public class MainFrame extends JFrame {
     }
 
     private void setUpPages() {
+        InventoryPage inventoryPage = new InventoryPage(this, inventory);
         // Pass the shared inventory instance to all pages
         mainPanel.add(new HomePage(this, inventory), "Home");
-        mainPanel.add(new InventoryPage(this, inventory), "Inventory");
-//        mainPanel.add(new SettingsPage(this), "Settings"); // Settings might not need inventory
+        mainPanel.add(inventoryPage, "Inventory");
+        mainPanel.add(new SettingsPage(inventory, () -> inventoryPage.showAllItem()), "Settings");
     }
 
     // Navigation method for pages to use
