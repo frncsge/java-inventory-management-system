@@ -39,9 +39,9 @@ public class InventoryTable extends JPanel {
 
                     //check if qty is low
                     if (qty <= 5) {
-                        cell.setForeground(Color.RED);
+                        textColor = Color.RED;
                     } else if (qty <= 10) {
-                        cell.setForeground(Color.ORANGE);
+                        textColor = Color.ORANGE;
                     } else {
                         textColor = isDarkMode ? Color.WHITE : Color.BLACK;
                     }
